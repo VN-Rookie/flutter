@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/onboarding_screen.dart';
-import 'screens/login_screen.dart';
-import 'screens/home_screen.dart';
+import 'router/app_router.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +10,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Routine Raise',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -30,12 +28,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const OnboardingScreen(),
-        '/login': (context) => const LoginScreen(),
-        '/home': (context) => const HomeScreen(),
-      },
+      routerConfig: appRouter,
     );
   }
 }

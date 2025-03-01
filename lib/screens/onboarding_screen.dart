@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:my_app/components/onboarding_screen/build_dot_indicator.dart';
+import 'package:my_app/components/onboarding_screen/build_scroll_page.dart';
+import 'package:my_app/config/router.dart';
 import 'package:my_app/type/onboarding_page.dart';
+import 'package:my_app/components/background_decorator.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -14,17 +19,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<OnboardingPage> _pages = [
     OnboardingPage(
-      title: 'ROUTINE RAISE',
       subtitle: 'Sync Your Time, Master Your Life.',
       description: 'Take on daily quests and build lasting habits',
     ),
     OnboardingPage(
-      title: 'TRACK PROGRESS',
       subtitle: 'Monitor Your Growth.',
       description: 'Visualize your improvements and stay motivated',
     ),
     OnboardingPage(
-      title: 'STAY FOCUSED',
       subtitle: 'Eliminate Distractions.',
       description: 'Concentrate on what matters most to achieve your goals',
     ),
@@ -45,161 +47,107 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFFF5F0E5), // Beige background color from the image
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Status bar area with time and indicators
-              const SizedBox(height: 20),
-              //Render logo here
-              Image.asset(
-                'assets/images/logo.png',
-                height: 200,
-                width: 200,
+      body: BackgroundDecorator(
+        child: Column(
+          children: [
+            // Status bar area with time and indicators
+            const SizedBox(height: 20),
+            //Render logo here
+            Image.asset(
+              'assets/images/logo.png',
+              height: 200,
+              width: 200,
+            ),
+            Text(
+              "ROUTINE RAISE",
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
-              Text("ROUTINE RAISE"),
+            ),
+            // Main content area
+            Expanded(
+              child: PageView.builder(
+                controller: _pageController,
+                onPageChanged: _onPageChanged,
+                physics: const BouncingScrollPhysics(),
+                pageSnapping: true,
+                itemCount: _pages.length,
+                itemBuilder: (context, index) {
+                  return buildPage(_pages[index]);
+                },
+              ),
+            ),
 
-              // Main content area
-              Expanded(
-                child: PageView.builder(
-                  controller: _pageController,
-                  onPageChanged: _onPageChanged,
-                  itemCount: _pages.length,
-                  itemBuilder: (context, index) {
-                    return _buildPage(_pages[index]);
-                  },
+            // Page indicators
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  _pages.length,
+                  (index) => buildDotIndicator(_currentPage, index),
                 ),
               ),
+            ),
 
-              // Page indicators
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+            // Get Started button
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: ElevatedButton(
+                onPressed: () {
+                  if (_currentPage < _pages.length - 1) {
+                    _pageController.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeIn,
+                    );
+                  } else {
+                    // Navigate to login screen
+                    context.push(ROUTE.login);
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 56),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    _pages.length,
-                    (index) => _buildDotIndicator(index),
-                  ),
-                ),
-              ),
-
-              // Get Started button
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_currentPage < _pages.length - 1) {
-                      _pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeIn,
-                      );
-                    } else {
-                      // Navigate to login screen
-                      Navigator.pushReplacementNamed(context, '/login');
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
-                    minimumSize: const Size(double.infinity, 56),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      _currentPage < _pages.length - 1 ? 'Next' : 'Get Started',
+                      style: const TextStyle(fontSize: 18),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _currentPage < _pages.length - 1
-                            ? 'Next'
-                            : 'Get Started',
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                      const SizedBox(width: 8),
-                      const Icon(Icons.arrow_forward),
-                    ],
-                  ),
+                    const SizedBox(width: 8),
+                    const Icon(
+                      Icons.arrow_forward,
+                      color: Color.fromARGB(255, 252, 252, 252),
+                    ),
+                  ],
                 ),
               ),
+            ),
 
-              // Already have an account link
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20, top: 10),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/login');
-                  },
-                  child: const Text(
-                    'Already have an account? Log In',
-                    style: TextStyle(color: Colors.black54),
-                  ),
+            // Already have an account link
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20, top: 10),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/login');
+                },
+                child: const Text(
+                  'Already have an account? Log In',
+                  style: TextStyle(color: Colors.black54),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildPage(OnboardingPage page) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(height: 40),
-          // Title
-          Text(
-            page.title,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Subtitle
-          Text(
-            page.subtitle,
-            style: const TextStyle(
-              fontSize: 18,
-              color: Colors.black87,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 30),
-
-          // Challenge description
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-            child: Text(
-              page.description,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.black54,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDotIndicator(int index) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      width: 10,
-      height: 10,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: _currentPage == index ? Colors.black : Colors.grey.shade300,
       ),
     );
   }

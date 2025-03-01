@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:my_app/config/router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -36,12 +38,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 IconButton(
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.pop();
                   },
                 ),
-                
+
                 const SizedBox(height: 30),
-                
+
                 // Login header
                 const Text(
                   'Welcome Back',
@@ -50,9 +52,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                
+
                 const SizedBox(height: 12),
-                
+
                 const Text(
                   'Sign in to continue your productivity journey',
                   style: TextStyle(
@@ -60,9 +62,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: Colors.black54,
                   ),
                 ),
-                
+
                 const SizedBox(height: 40),
-                
+
                 // Email field
                 TextField(
                   controller: _emailController,
@@ -84,9 +86,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Password field
                 TextField(
                   controller: _passwordController,
@@ -109,9 +111,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Remember me and Forgot password
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -140,9 +142,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 30),
-                
+
                 // Login button
                 ElevatedButton(
                   onPressed: () {
@@ -162,9 +164,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Social login options
                 Row(
                   children: [
@@ -176,9 +178,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     const Expanded(child: Divider()),
                   ],
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Social login buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -188,9 +190,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     _socialLoginButton(Icons.apple, 'Apple'),
                   ],
                 ),
-                
+
                 const Spacer(),
-                
+
                 // Sign up option
                 Center(
                   child: Row(
@@ -199,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const Text("Don't have an account? "),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/register');
+                          context.push(ROUTE.register);
                         },
                         child: const Text(
                           'Sign Up',

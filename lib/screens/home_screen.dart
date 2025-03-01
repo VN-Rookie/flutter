@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'daily_planner_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _selectedIndex = index;
     });
   }
+
 
   // Daily schedule data
   final List<Map<String, dynamic>> _schedule = [
@@ -55,6 +58,16 @@ class _HomeScreenState extends State<HomeScreen> {
       'title': 'Reading Challenge',
       'icon': Icons.book,
       'daysLeft': 12,
+    },
+    {
+      'title': 'Reading Challenge',
+      'icon': Icons.book,
+      'daysLeft': 12,
+    },
+    {
+      'title': 'Fitness Challenge',
+      'icon': Icons.fitness_center,
+      'daysLeft': 5,
     },
   ];
 
@@ -257,54 +270,95 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 15),
 
                 // Challenge cards
-                Row(
-                  children: _challenges.map((challenge) {
-                    return Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(
-                            right: challenge == _challenges.first ? 10 : 0),
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(challenge['icon']),
-                            const SizedBox(height: 15),
-                            Text(
-                              challenge['title'],
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
+                SizedBox(
+                  width: double.infinity,
+                  height: 140, // Set appropriate height for the carousel
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      // Calculate responsive viewportFraction based on screen width
+                      final screenWidth = MediaQuery.of(context).size.width;
+                      final cardWidth = screenWidth < 400
+                          ? 0.45
+                          : 0.4; // Adjust for smaller screens
+
+                      return FlutterCarousel(
+                        items: _challenges.map((challenge) {
+                          return Container(
+                            // Let the width be determined by the parent and viewportFraction
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
                             ),
-                            const SizedBox(height: 5),
-                            Text(
-                              '${challenge['daysLeft']} days left',
-                              style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 13),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(challenge['icon']),
+                                const SizedBox(height: 15),
+                                Text(
+                                  challenge['title'],
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  '${challenge["daysLeft"]} days left',
+                                  style: TextStyle(
+                                      color: Colors.grey[600], fontSize: 13),
+                                ),
+                              ],
                             ),
-                          ],
+                          );
+                        }).toList(),
+                        options: CarouselOptions(
+                          viewportFraction: cardWidth,
+                          autoPlay: false,
+                          enableInfiniteScroll: true,
+                          enlargeCenterPage: true,
+                          padEnds: true,
+                          initialPage: 0,
                         ),
-                      ),
-                    );
-                  }).toList(),
+                      );
+                    },
+                  ),
                 ),
 
                 const SizedBox(height: 25),
 
-                // Daily Schedule
-                const Text(
-                  'Daily Schedule',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                // Daily Schedule with accordion
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DailyPlannerScreen(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      children: [
+                        const Text(
+                          'Daily Schedule',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Icon(
+                          Icons.keyboard_arrow_right,
+                          color: Colors.black54,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
 
-                const SizedBox(height: 15),
-
-                // Schedule list
+                // Expandable schedule content
                 Column(
                   children: _schedule.map((item) {
                     return Container(
