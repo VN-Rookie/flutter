@@ -18,7 +18,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-
   // Daily schedule data
   final List<Map<String, dynamic>> _schedule = [
     {

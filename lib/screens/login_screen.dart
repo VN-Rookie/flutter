@@ -149,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ElevatedButton(
                   onPressed: () {
                     // Implement login functionality
-                    Navigator.pushReplacementNamed(context, '/home');
+                    context.push(ROUTE.home);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,

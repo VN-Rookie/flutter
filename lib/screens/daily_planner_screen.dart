@@ -9,7 +9,7 @@ class DailyPlannerScreen extends StatefulWidget {
 
 class _DailyPlannerScreenState extends State<DailyPlannerScreen> {
   DateTime _selectedDate = DateTime.now();
-  
+
   // Sample schedule data - in a real app, this would come from a database or state management
   final List<Map<String, dynamic>> _schedule = [
     {
@@ -65,12 +65,33 @@ class _DailyPlannerScreenState extends State<DailyPlannerScreen> {
 
   // Format date as "Day, Month Date"
   String _formatDate(DateTime date) {
-    final List<String> weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    final List<String> months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    
+    final List<String> weekdays = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
+    ];
+    final List<String> months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+
     final weekday = weekdays[date.weekday - 1];
     final month = months[date.month - 1];
-    
+
     return '$weekday, $month ${date.day}';
   }
 
@@ -109,7 +130,8 @@ class _DailyPlannerScreenState extends State<DailyPlannerScreen> {
         children: [
           // Date selector
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -131,7 +153,7 @@ class _DailyPlannerScreenState extends State<DailyPlannerScreen> {
               ],
             ),
           ),
-          
+
           // Today button
           Container(
             margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -147,12 +169,13 @@ class _DailyPlannerScreenState extends State<DailyPlannerScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               ),
               child: const Text('Today'),
             ),
           ),
-          
+
           // Schedule timeline
           Expanded(
             child: ListView.builder(
@@ -161,14 +184,14 @@ class _DailyPlannerScreenState extends State<DailyPlannerScreen> {
               itemBuilder: (context, hourIndex) {
                 final hour = hourIndex;
                 final hourString = hour.toString().padLeft(2, '0') + ':00';
-                
+
                 // Find events that occur during this hour
                 final eventsThisHour = _schedule.where((event) {
                   final startHour = int.parse(event['startTime'].split(':')[0]);
                   final endHour = int.parse(event['endTime'].split(':')[0]);
                   return (hour >= startHour && hour < endHour);
                 }).toList();
-                
+
                 return Column(
                   children: [
                     Row(
@@ -186,7 +209,7 @@ class _DailyPlannerScreenState extends State<DailyPlannerScreen> {
                             ),
                           ),
                         ),
-                        
+
                         // Events column
                         Expanded(
                           child: Column(
@@ -202,7 +225,8 @@ class _DailyPlannerScreenState extends State<DailyPlannerScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           event['title'],
