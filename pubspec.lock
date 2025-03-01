@@ -75,6 +75,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  icon_icons:
+    dependency: "direct main"
+    description:
+      name: icon_icons
+      sha256: "6225095a3ece5099cad8086e0513858400e22dd9f3d060e2c9c48e108fe1e9e1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   leak_tracker:
     dependency: transitive
     description:
